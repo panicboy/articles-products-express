@@ -21,7 +21,7 @@ Each of your resources will have it's own module in charge of it's own data. Thi
 `/products`
 - `POST` creates a new product
   - The incoming request will look like this: `{ name: String, price: String, inventory: Number }`
-    - from this request you will save your data as `{ id: Number, name: String, price: String, inventory: Number }`
+    - from this request you will save your data as `{ id: Number, name: String, price: Number, inventory: Number }`
       - **id** is a unique identifier for this item. You will generate this on the server side and it will be used to access specific products with it
     - Respond with `{ "success": Bool }`, **true** if successful otherwise **false**
 
@@ -61,8 +61,8 @@ Inside of your templates directory you should have the templates below in a dire
   - The incoming request will look like this: `{ title: String, body: String, author: String }`
     - from this request you will save your data as `{ title: String, body: String, author: String, urlTitle: String }`
       - **title** is a unique identifier for this item. You will generate this on the server side and it will be used to access specific products with it
-      - **urlTitle** is similar to the **title** that was passed in but instead is a URL Encoded version. *Javascript has a native way to url-encode strings*. 
-        **example:** If given a title of `"The Best Magpie Developer of 2016"`, it's url-encoded equivilent is `"The%20Best%20Magpie%20Developer%20of%202016"`.
+      - **urlTitle** is similar to the **title** that was passed in but instead is a URL Encoded version. *Javascript has a native way to url-encode strings*.
+        **example:** If given a title of `"The Best Magpie Developer of 2016"`, it's url-encoded equivalent is `"The%20Best%20Magpie%20Developer%20of%202016"`.
     - Respond with `{ "success": Bool }`, **true** if successful otherwise **false**
 
 `/articles/:title`
