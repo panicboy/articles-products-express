@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/panicboy/articles-products-express#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "chai": "^3.5.0",
     "jade": "^1.11.0",
     "mocha": "^2.5.3",
