@@ -11,8 +11,8 @@ var aRoute = require ('./routes/articles');
 
 /*  MIDDLEWARE  */
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use('/articles', aRoute);
-// app.use('/products', pRoute);
+app.use('/articles', aRoute);
+app.use('/products', pRoute);
 
 app.get('/', function(req, res) {
   res.send(`I'm here!`);
