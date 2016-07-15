@@ -11,4 +11,12 @@ Router.get('/', (req, res) => {
   res.send('Hello, I am also here!');
 });
 
+Router.post('/', (req, res) => {
+  var productPostFormat = { name: 'string', price: 'string', inventory: 'number' };
+  console.log('req.body: ', req.body);
+  res.send('Hello, I am also here!');
+});
+
 module.exports = Router;
+
+var productPostFormat = { name: 'string', price: 'string', inventory: 'number' };
