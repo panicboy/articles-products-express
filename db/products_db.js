@@ -5,7 +5,7 @@ module.exports = (function() {
   var productSpec = {name: 'string', price: 'number', inventory: 'number'};
 
   function _getById(idToFind, cb) {
-    var indx = productIdStorage.indexOf(Number(idToFind));
+    let indx = productIdStorage.indexOf(idToFind);
     console.log('productStorage: ', productStorage);
     console.log('productIdStorage: ', productIdStorage);
     console.log('looking for index: ', indx);
@@ -15,11 +15,11 @@ module.exports = (function() {
     return cb('CANNOT FIND NUMBER BY ID');
   }
 
-  function _getAll(cb) {
+  function _getAll() {
     if (!productStorage.length) {
-      return cb('no products.');
+      return false;
     }
-    return cb(null, productStorage);
+    return productStorage;
   }
 
   function _newId(){
@@ -27,14 +27,16 @@ module.exports = (function() {
   }
 
   function _addProduct(theProduct, cb){
-    var productCount = productStorage.length;
-    var pId = Number(theProduct.id);
+    let productCount = productStorage.length;
+    let pId = Number(theProduct.id);
+    theProduct.price = Number(theProduct.price);
+    theProduct.inventory = Number(theProduct.inventory);
     productIdStorage.push(pId);
     return cb(productStorage.push(theProduct) > productCount);
   }
 
   function _deleteProduct(idToDelete, cb) {
-    var indx = productIdStorage.indexOf(idToDelete);
+    let indx = productIdStorage.indexOf(Number(idToDelete));
     if(indx > -1) {
       productIdStorage.splice(indx,1);
       return cb(productStorage.splice(indx,1).length > 0);
@@ -43,13 +45,14 @@ module.exports = (function() {
   }
 
   function _updateProduct(pId, propertiesToUpdate, cb){
-    var indx = productIdStorage.indexOf(idToDelete);
-    var updateKeys = Object.keys(propertiesToUpdate);
+    let indx = productIdStorage.indexOf(Number(pId));
+    let updateKeys = Object.keys(propertiesToUpdate);
     if(indx > -1){
-      for (var i = 0 ; i < updateKeys.length - 1; i++) {
-        var prop = updateKeys[i];
-        if(!productIdStorage[indx].hasOwnProperty(prop)) return cb(false);
-        productIdStorage[indx].prop = propertiesToUpdate.prop;
+      for (var i = 0 ; i <= updateKeys.length - 1; i++) {
+        let prop = updateKeys[i];
+        if(!productStorage[indx].hasOwnProperty(prop)) return cb(false);
+        if(productSpec[prop] == 'number') propertiesToUpdate[prop] = Number(propertiesToUpdate[prop]);
+        productStorage[indx][prop] = propertiesToUpdate[prop];
       }
       return cb(true);
     }
