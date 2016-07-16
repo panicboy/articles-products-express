@@ -28,12 +28,11 @@ module.exports = (function(){
   }
 
   function _add(theArticle, cb){
-     console.log('title: ', theArticle.title);
      let theTitle = theArticle.title;
      let articleCount = articleStorage.length;
     if(titleStorage.indexOf(theTitle) > -1) return cb(false);
     titleStorage.push(theTitle);
-    console.log('encoded title: ', theArticle.urlTitle);
+    console.log(`'${theTitle}' stored. Encoded: `, theArticle.urlTitle);
     return cb(articleStorage.push(theArticle) > articleCount);
   }
 

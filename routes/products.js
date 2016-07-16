@@ -9,12 +9,14 @@ app.set('view engine', 'jade');
 
 Router.post('/', (req, res) => {
   // POST creates a new product
+  if(!utils.validateParams(req.body, productsDb.getProductSpec())) {
+    logdb.write(utils.logEntry(req.method,req.url,req.socket.remoteAddress, 'post not validated'));
+    console.log('Product POST not validated. productId: ', productId);
+    return res.json({ success: false });
+  }
   var body = req.body;
-  // var expectedHeaders = { version: { format: 'number', value: '1.0'} };
-  // console.log('headers validated: ', utils.validateParams(req.headers, expectedHeaders));
-  var validated = utils.validateParams(body, productsDb.getProductSpec());
   var productId = productsDb.newId();
-  console.log('validated: ', validated, '; productId: ', productId);
+  console.log('Product POST validated. productId: ', productId);
   // add id to new product
   body.id = productId;
   productsDb.addProduct(body, (cb) => {
@@ -55,4 +57,3 @@ Router.put('/:id', (req, res) => {
   });
 
 module.exports = Router;
-

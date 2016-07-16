@@ -1,3 +1,5 @@
+const utils = require('../lib/helpers');
+
 module.exports = (function(){
   var logStorage = [];
   var logSpec = {method: 'string', uri: 'string', client: 'string', timestamp: 'string'};
@@ -18,15 +20,16 @@ module.exports = (function(){
 
   function _get(linebreak){
     if(arguments.length === 0) linebreak = '\n';
+    if(linebreak == 'array') return logStorage;
     let output = '';
     if(logStorage){
       for (var i = 0; i <= logStorage.length - 1; i++) {
-        entry = logStorage[i];
-        output += entry.timestamp + '  method: ' + entry.method + '  client: ' + entry.client + '  uri: ' + entry.uri + linebreak;
+        output += utils.objToString(logStorage[i]) + linebreak;
       }
     }
     return output;
   }
+
 
   return {
     write: _write,
