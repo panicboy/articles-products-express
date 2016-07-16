@@ -12,6 +12,13 @@ module.exports = (function(){
     return cb('CANNOT FIND TITLE');
   }
 
+  function _listTitles() {
+    return articleStorage.map(function(el, i, a) {
+      console.log('title: ', el.title, ', urlTitle: ', el.urlTitle);
+      return {title: el.title, urlTitle: el.urlTitle};
+    });
+  }
+
   function _all(){
     return 'Hi, all!';
   }
@@ -22,12 +29,12 @@ module.exports = (function(){
 
   function _add(theArticle, cb){
      console.log('title: ', theArticle.title);
-    //  let articleCount = articleStorage.length;
-    // if(titleStorage.indexOf(theTitle) > -1) return cb(false);
-    // let titleCount = titleStorage.length;
-    // productIdStorage.push(pId);
-    // return cb(productStorage.push(theProduct) > productCount);
-    cb('hi!');
+     let theTitle = theArticle.title;
+     let articleCount = articleStorage.length;
+    if(titleStorage.indexOf(theTitle) > -1) return cb(false);
+    titleStorage.push(theTitle);
+    console.log('encoded title: ', theArticle.urlTitle);
+    return cb(articleStorage.push(theArticle) > articleCount);
   }
 
   function _getArticleSpec(){
@@ -38,6 +45,8 @@ module.exports = (function(){
     all: _all,
     add: _add,
     getByTitle: _getByTitle,
-    editByTitle: _editByTitle
+    editByTitle: _editByTitle,
+    getArticleSpec: _getArticleSpec,
+    listTitles: _listTitles
   };
 })();
