@@ -6,10 +6,6 @@ module.exports = (function() {
 
   function _getById(idToFind, cb) {
     let indx = productIdStorage.indexOf(idToFind);
-    console.log('productStorage: ', productStorage);
-    console.log('productIdStorage: ', productIdStorage);
-    console.log('looking for index: ', indx);
-    console.log('product: ', productStorage[indx]);
     if(indx > -1) return cb(productStorage[indx]);
     // otherwise, if no number is found?
     return cb('CANNOT FIND NUMBER BY ID');
