@@ -55,8 +55,11 @@ module.exports = (function() {
     return cb(false);
   }
 
-  function _getProductSpec() {
-    return productSpec;
+  function _getProductSpec(optionalSpec) {
+    if(arguments.length === 0) return productSpec;
+    let fullSpec = productSpec;
+    fullSpec.id = 'number';
+    return fullSpec;
   }
 
   return {

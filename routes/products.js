@@ -2,6 +2,7 @@ const express  = require('express');
 const utils = require('../lib/helpers');
 const bodyParser = require('body-parser');
 const productsDb = require('../db/products_db');
+const logdb = require('../db/log_db');
 const Router = express.Router();
 const app = express();
 app.set('view engine', 'jade');
@@ -24,8 +25,10 @@ Router.post('/', (req, res) => {
   });
 });
 
+
+/*  RENDERING  */
 Router.get('/:id/edit', (req, res) => {
-    return res.send('Dude, you totally want to edit a product');
+    return res.send(`Dude, you totally want to edit a product with ID '${req.params.id}'`);
   });
 
 Router.get('/new', (req, res) => {
@@ -50,8 +53,17 @@ Router.get('/', (req, res) => {
   });
 
 Router.put('/:id', (req, res) => {
-  var pId = Number(req.params.id);
+  let pId = Number(req.params.id);
+  let productUpdateSpec = utils.filterObject(req.body, productsDb.getProductSpec('full'));
+  if(productUpdateSpec === false || !utils.validateParams(req.body, productUpdateSpec)) {
+    logdb.write(utils.logEntry(req.method,req.url,req.socket.remoteAddress, 'product update not validated'));
+    console.log(`Product update not validated.`);
+    return res.json({ success: false });
+  }
     productsDb.updateProduct(pId, req.body, (result) => {
+      productsDb.getById(pId, (product) => {
+        console.log(`updated: ${result}; product: ${result}`);
+      });
       return res.json({ success: result });
     });
   });

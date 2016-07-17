@@ -17,19 +17,51 @@ Router.all('*', (req, res, next) => {
   return res.json({ "error": "bad headers" });
 });
 
-Router.get('/', (req, res) => {
-  res.send('Hi there!');
-});
-
 Router.get('/titles', (req, res) => {
   var titles = articlesDb.listTitles();
   res.send(titles);
 });
 
 Router.get('/:title', (req, res) => {
-  var titleString = decodeURI(req.params.title);
-  articlesDb.getByTitle(titleString, (cb) => {
+  let title = req.params.title;
+  console.log('you want to get: ', title);
+  // var titleString = decodeURI(req.params.title);
+  articlesDb.getByTitle(title, (cb) => {
     res.send(cb);
+  });
+});
+
+Router.put('/:title', (req, res) => {
+  let title = req.params.title;
+  let body = req.body;
+  console.log('you want to edit: ', title);
+  let articleUpdateSpec = utils.filterObject(body, articlesDb.getArticleSpec('full'));
+  console.log('articleUpdateSpec: ', articleUpdateSpec, ', body: ', body);
+  // check for bad request
+  if(articleUpdateSpec === false || !utils.validateParams(body, articleUpdateSpec)) return res.status(404).json({ success: false });
+  // var titleString = decodeURI(req.params.title);
+  var indx = articlesDb.articleIndex(title);
+  if(indx < 0) return res.status(404).json({ success: false }); // title not found
+// send title & edited params
+  articlesDb.updateArticle(indx, body, (cb) => {
+    res.json({success: cb});
+  });
+});
+
+Router.delete('/:title', (req, res) => {
+  let title = req.params.title;
+  console.log('you want to delete: ', title);
+  // console.log('full spec: ', articlesDb.getArticleSpec('full'));
+  // let articleUpdateSpec = utils.filterObject(body, articlesDb.getArticleSpec('full'));
+  // console.log('body: ', body, ', articleUpdateSpec: ', articleUpdateSpec);
+  // check for bad request
+  // if(articleUpdateSpec === false || !utils.validateParams(body, articleUpdateSpec)) return res.status(404).json({ success: false });
+  // var titleString = decodeURI(req.params.title);
+  var indx = articlesDb.articleIndex(title);
+  if(indx < 0) return res.status(404).json({ success: false }); // title not found
+// send title & edited params
+  articlesDb.deleteArticle(indx, (cb) => {
+    res.json({success: cb});
   });
 });
 
@@ -43,6 +75,10 @@ Router.post('/', (req, res) => {
   articlesDb.add(body, (cb) => {
     res.json({success: cb});
   });
+});
+
+Router.get('/', (req, res) => {
+  res.send(articlesDb.all());
 });
 
 module.exports = Router;

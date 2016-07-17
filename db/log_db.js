@@ -1,12 +1,12 @@
-const utils = require('../lib/helpers');
-
 module.exports = (function(){
+  const utils = require('../lib/helpers');
   var logStorage = [];
   var logSpec = {method: 'string', uri: 'string', client: 'string', timestamp: 'string'};
   // ... functions declared and private variables?!
   // ...
   //...
   function _write(logItem) {
+    console.log('>> ', utils.objToString(logItem));
     logStorage.push(logItem);
   }
 

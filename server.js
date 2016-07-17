@@ -16,7 +16,6 @@ var lRoute = require ('./routes/log');
 
 /*  MIDDLEWARE  */
 app.use(function(req, res, next) {
-  console.log(utils.timeStamp(), ' ', req.method,' uri: ', req.url);
   logdb.write(utils.logEntry(req.method,req.url,req.socket.remoteAddress));
     next();
 });
