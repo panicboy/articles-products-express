@@ -1,5 +1,12 @@
 # Articles, Products, and Express - Oh my!
 
+## Tests
+Let the **Tests drive your development** or write your tests after. The choice is up to you! As for the testing tools use:
+  - [mocha](https://mochajs.org/)
+  - [chai](https://chaijs.com/)
+  - [supertest](https://github.com/visionmedia/supertest)
+    - [supertest is built upon `superagent` so these docs will be helpful as well](https://github.com/visionmedia/superagent)
+
 ## Goal
 Build a mock application which will have 2 resources: Products and Articles. Each resource will have an implementation of **CRUD** (create, read, update, delete). You should make use of Express' **Router** module to keep your code organized. Routes go in a directory called **routes**.
 
@@ -20,7 +27,7 @@ Each of your resources will have it's own module in charge of it's own data. Thi
 ## Product Routes
 `/products`
 - `POST` creates a new product
-  - The incoming request will look like this: `{ name: String, price: String, inventory: Number }`
+  - The incoming request will look like this: `{ name: String, price: String, inventory: String }`
     - from this request you will save your data as `{ id: Number, name: String, price: Number, inventory: Number }`
       - **id** is a unique identifier for this item. You will generate this on the server side and it will be used to access specific products with it
     - Respond with `{ "success": Bool }`, **true** if successful otherwise **false**
@@ -60,17 +67,17 @@ Inside of your templates directory you should have the templates below in a dire
 - `POST` creates a new article
   - The incoming request will look like this: `{ title: String, body: String, author: String }`
     - from this request you will save your data as `{ title: String, body: String, author: String, urlTitle: String }`
-      - **title** is a unique identifier for this item. You will generate this on the server side and it will be used to access specific products with it
+      - **title** is a unique identifier for this item.
       - **urlTitle** is similar to the **title** that was passed in but instead is a URL Encoded version. *Javascript has a native way to url-encode strings*.
-        **example:** If given a title of `"The Best Magpie Developer of 2016"`, it's url-encoded equivalent is `"The%20Best%20Magpie%20Developer%20of%202016"`.
+        **example:** If given a title of `"The Best Magpie Developer of 2016"`, it's url-encoded equivilent is `"The%20Best%20Magpie%20Developer%20of%202016"`.
     - Respond with `{ "success": Bool }`, **true** if successful otherwise **false**
 
 `/articles/:title`
 - `PUT` edits a product. Finds an article in a collection with the same `title` value and updates the information.
   - The incoming request will look like this: `{ title: String, ... }`
-    - `...` represents a field to be edited for example: if the server was sent `{ title: "The Best Magpie Developer of 2016" }` the server will find an article with an **id** of **12** and change the `title` property to be `"The Best Magpie Developer of 2016"`.
+    - `...` represents a field to be edited for example: if the server was sent `{ title: "The Best Magpie Developer of 2016" }` the server will find an article with a `title` property to be `"The Best Magpie Developer of 2016"`.
 
-`/article/:title`
+`/articles/:title`
 - `DELETE` removes a article by it's **title**.
   - Respond with `{ "success": Bool }`, **true** if successful otherwise **false**
 

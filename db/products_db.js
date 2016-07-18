@@ -5,6 +5,8 @@ module.exports = (function() {
   var productSpec = {name: 'string', price: 'number', inventory: 'number'};
 
   function _getById(idToFind, cb) {
+    idToFind = Number(idToFind);
+    console.log('searching for index: ', idToFind);
     let indx = productIdStorage.indexOf(idToFind);
     if(indx > -1) return cb(productStorage[indx]);
     // otherwise, if no number is found?

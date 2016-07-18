@@ -1,0 +1,15 @@
+//- include ../mixins/listyThing
+
+//- h1 You want products? We got products!
+//- mixin listOfProducts(products)
+h1 You want products? We got products!
+
+ul
+  each product in productList
+    li
+      a(href='/products/#{product.id}') #{product.name}
+      p #{product.priceString}
+//- each product in productList
+//-   .p
+//-     a(href='/products/#{product.id}') #{product.name}
+//-     #{product.price}

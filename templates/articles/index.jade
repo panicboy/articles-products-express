@@ -1,0 +1,9 @@
+//- include ../mixins/listyThing
+
+//- h1 You want articles? We got articles!
+//- mixin listOfArticles(articles)
+
+h1 You want articles? We got articles!
+  ul
+    each article in articleList
+      li a(href=#{article.urlTitle}) #{article.title}

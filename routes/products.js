@@ -5,8 +5,20 @@ const productsDb = require('../db/products_db');
 const logdb = require('../db/log_db');
 const Router = express.Router();
 const app = express();
+const methodOverride = require('method-override');
+app.use(methodOverride('X-HTTP-Method-Override'));
 app.set('view engine', 'jade');
 
+
+/*  >>> DAS MIDDLEWARE <<<  */
+Router.use(methodOverride(function(req, res){
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    const method = req.body._method;
+    delete req.body._method;
+    return method;
+  }
+}));
 
 Router.post('/', (req, res) => {
   // POST creates a new product
@@ -20,6 +32,7 @@ Router.post('/', (req, res) => {
   console.log('Product POST validated. productId: ', productId);
   // add id to new product
   body.id = productId;
+  body.priceString = utils.currencyString(body[price]);
   productsDb.addProduct(body, (cb) => {
     res.json({success: cb});
   });
@@ -31,25 +44,34 @@ Router.get('/:id/edit', (req, res) => {
     return res.send(`Dude, you totally want to edit a product with ID '${req.params.id}'`);
   });
 
+Router.get('/edit/:id/:thingtoedit', (req, res) => {
+  let pId = req.params.id;
+  let itemToEdit = req.params.thingtoedit;
+
+    productsDb.getById(pId, (product) => {
+      let itemVal = product[itemToEdit];
+      console.log(`${itemToEdit}: `, product[itemToEdit]);
+      res.render('../templates/products/edit', {product, itemToEdit, itemVal});
+    });
+  });
+
 Router.get('/new', (req, res) => {
     res.send(`One day you will be able to create a new product here, just like if you used POST. But it'll be SOOOOOO much nicer, 'cause it'll be all HTML'd up.`);
   });
 
 Router.get('/:id', (req, res) => {
   var pId = Number(req.params.id);
-  console.log(`You're looking for product id: `, pId);
     productsDb.getById(pId, (product) => {
-      return res.send(product);
+      console.log('product: ', product);
+      product.priceString = utils.currencyString(product[price]);
+      res.render('../templates/products/item', {product});
     });
   });
 
 Router.get('/', (req, res) => {
   let productList = productsDb.getAll();
-  if(productList) return res.send(productList);
-  return res.json({success: productList});
-  // responds with HTML generated from your template which displays all Products added thus far.
-      // file name: index.jade
-  // res.send('One day you will be seeing index.jade here.');
+  if(productList) res.render('../templates/products/index', {productList});
+  //   return res.send(productList);
   });
 
 Router.put('/:id', (req, res) => {

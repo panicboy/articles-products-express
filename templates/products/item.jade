@@ -1,0 +1,11 @@
+
+h2
+  a(href='/products/#{product.id}/edit') #{product.name}
+
+ul
+  li name:
+    a(href='/products/edit/#{product.id}/name') #{product.name}
+  li price:
+    a(href='/products/edit/#{product.id}/price') #{product.priceString}
+  li inventory:
+    a(href='/products/edit/#{product.id}/inventory') #{product.inventory}

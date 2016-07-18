@@ -1,4 +1,5 @@
 module.exports = (function(){
+  const articleHeaderSpec = { version: { format: 'string', value: '1.0'} };
   var titleStorage = [];
   var articleStorage = [];
   var articleSpec = {title: 'string', body: 'string', author: 'string'};
@@ -29,7 +30,6 @@ module.exports = (function(){
 
   function _updateArticle(indx, propertiesToUpdate, cb){
     let theArticle =  articleStorage[indx];
-    // console.log('original article: ', theArticle);
     for (var key in propertiesToUpdate) {
       if(!articleStorage[indx].hasOwnProperty(key)) return cb(false);
       console.log(`article ${key}: ${articleStorage[indx][key]}; change to: ${propertiesToUpdate[key]}`);
@@ -38,7 +38,6 @@ module.exports = (function(){
     console.log('updated article: ', articleStorage[indx]);
     return cb(true);
   }
-
 
   function _add(theArticle, cb){
      let theTitle = theArticle.title;
@@ -50,7 +49,10 @@ module.exports = (function(){
   }
 
   function _getArticleSpec(optionalSpec){
-    if(arguments.length === 0) return articleSpec;
+    return articleHeaderSpec;
+  }
+
+  function _getArticleHeaderSpec(){
     let fullSpec = articleSpec;
     fullSpec.urlTitle = 'string';
     return fullSpec;
@@ -69,6 +71,7 @@ module.exports = (function(){
     listTitles: _listTitles,
     articleIndex: _articleIndex,
     updateArticle: _updateArticle,
-    deleteArticle: _deleteArticle
+    deleteArticle: _deleteArticle,
+    getArticleHeaderSpec: _getArticleHeaderSpec
   };
 })();

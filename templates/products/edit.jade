@@ -1,0 +1,9 @@
+h1 Edit #{product.name}
+form(action='/products/#{product.id}' method='POST')
+  input(type='hidden' name='_method' value='PUT')
+  div
+    label(for='#{itemToEdit}') #{itemToEdit}: &nbsp;
+    input(type='text' name='#{itemToEdit}' value='#{itemVal}' id='#{itemToEdit}')
+
+  div.button
+    button(type='submit') Send

@@ -13,7 +13,6 @@ var pRoute = require ('./routes/products');
 var aRoute = require ('./routes/articles');
 var lRoute = require ('./routes/log');
 
-
 /*  MIDDLEWARE  */
 app.use(function(req, res, next) {
   logdb.write(utils.logEntry(req.method,req.url,req.socket.remoteAddress));
@@ -25,9 +24,9 @@ app.use('/articles', aRoute);
 app.use('/products', pRoute);
 
 
-app.get('/', function(req, res) {
-  res.send(`I'm here!`);
-});
+// app.get('/', function(req, res) {
+//   res.send(`I'm here!`);
+// });
 
 
 var server = app.listen(portNum, function(){

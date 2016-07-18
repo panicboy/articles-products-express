@@ -5,17 +5,30 @@ const utils = require('../lib/helpers');
 const bodyParser = require('body-parser');
 const articlesDb = require('../db/articles_db');
 const logdb = require('../db/log_db');
-const expectedHeaders = { version: { format: 'string', value: '1.0'} };
+const methodOverride = require('method-override');
+var expectedHeaders = articlesDb.getArticleHeaderSpec();
 app.set('view engine', 'jade');
 app.set('views','../templates');
+app.use(methodOverride('X-HTTP-Method-Override'));
 
 
-/*  MIDDLEWARE  */
+/*  >>> DAS MIDDLEWARE <<<  */
 Router.all('*', (req, res, next) => {
   if(utils.validateParams(req.headers, expectedHeaders)) return next();
   logdb.write(utils.logEntry(req.method,req.url,req.socket.remoteAddress, 'header not validated'));
   return res.json({ "error": "bad headers" });
 });
+
+Router.use(methodOverride(function(req, res){
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    const method = req.body._method;
+    delete req.body._method;
+    return method;
+  }
+}));
+
+/*  >>> DAS ROUTES <<<  */
 
 Router.get('/titles', (req, res) => {
   var titles = articlesDb.listTitles();
@@ -25,7 +38,6 @@ Router.get('/titles', (req, res) => {
 Router.get('/:title', (req, res) => {
   let title = req.params.title;
   console.log('you want to get: ', title);
-  // var titleString = decodeURI(req.params.title);
   articlesDb.getByTitle(title, (cb) => {
     res.send(cb);
   });
@@ -39,7 +51,6 @@ Router.put('/:title', (req, res) => {
   console.log('articleUpdateSpec: ', articleUpdateSpec, ', body: ', body);
   // check for bad request
   if(articleUpdateSpec === false || !utils.validateParams(body, articleUpdateSpec)) return res.status(404).json({ success: false });
-  // var titleString = decodeURI(req.params.title);
   var indx = articlesDb.articleIndex(title);
   if(indx < 0) return res.status(404).json({ success: false }); // title not found
 // send title & edited params
@@ -51,12 +62,6 @@ Router.put('/:title', (req, res) => {
 Router.delete('/:title', (req, res) => {
   let title = req.params.title;
   console.log('you want to delete: ', title);
-  // console.log('full spec: ', articlesDb.getArticleSpec('full'));
-  // let articleUpdateSpec = utils.filterObject(body, articlesDb.getArticleSpec('full'));
-  // console.log('body: ', body, ', articleUpdateSpec: ', articleUpdateSpec);
-  // check for bad request
-  // if(articleUpdateSpec === false || !utils.validateParams(body, articleUpdateSpec)) return res.status(404).json({ success: false });
-  // var titleString = decodeURI(req.params.title);
   var indx = articlesDb.articleIndex(title);
   if(indx < 0) return res.status(404).json({ success: false }); // title not found
 // send title & edited params
@@ -82,3 +87,4 @@ Router.get('/', (req, res) => {
 });
 
 module.exports = Router;
+

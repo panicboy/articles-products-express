@@ -1,0 +1,14 @@
+mixin listOfProducts(productList)
+  ul
+    each product in productList
+      li Product: a(href='#{product.id}') #{product.name}
+
+mixin listOfArticles(articleList)
+  ul
+    each article in articleList
+      li a(href=#{article.urlTitle}) #{article.title}
+
+mixin listOfLogs(logList)
+  ul
+    each log in logList
+      li #{log.entry}
